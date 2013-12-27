@@ -71,11 +71,13 @@ MockingBird.XMLHttpRequest.prototype = {
 	},
 
 	returnsHeaders: function returnsHeaders(headers) {
+		// TODO: use vanilla JS
 		this._responseHeaders.merge(headers);
 		return this;
 	},
 
 	sendsHeaders: function sendsHeaders(headers) {
+		// TODO: use vanilla JS
 		this._requestHeaders.merge(headers);
 		return this;
 	},

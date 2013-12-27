@@ -1,0 +1,14 @@
+{
+	"name": "mocking_bird",
+	"description": "Mocking Bird is an easy to use object mocking library to assist in unit testing JavaScript applications.",
+	"authors": [
+		"Greg Burghardt <greg_burghardt@yahoo.com>"
+	],
+	"version": "0.0.1",
+	"license": "MIT",
+	"repository": { "type": "git", "url": "https://github.com/gburghardt/mocking_bird.git" },
+	"main": [
+		"src/mocking_bird.js",
+		"src/mocking_bird/xml_http_request.js"
+	]
+}
