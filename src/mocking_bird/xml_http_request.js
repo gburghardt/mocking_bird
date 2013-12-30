@@ -1,13 +1,15 @@
-MockingBird.XMLHttpRequest = function XMLHttpRequest() {
+MockingBird.XMLHttpRequest = function XMLHttpRequest(options) {
 	this._requestHeaders = {};
 	this._responseHeaders = {};
-};
 
-/*
-TODO: Create a URL-matching factory method
+	if (options) {
+		this._setOptions(options);
+	}
+};
 
 MockingBird.XMLHttpRequest.OrigXMLHttpRequest = null;
 MockingBird.XMLHttpRequest.enabledCallback = null;
+MockingBird.XMLHttpRequest.mocks = {};
 
 MockingBird.XMLHttpRequest.disableNetworkConnections = function disableNetworkConnections(callback, context) {
 	this.OrigXMLHttpRequest = window.XMLHttpRequest;
@@ -19,6 +21,8 @@ MockingBird.XMLHttpRequest.disableNetworkConnections = function disableNetworkCo
 			callback: callback
 		};
 	}
+
+	return this;
 };
 
 MockingBird.XMLHttpRequest.enableNetworkConnections = function enableNetworkConnections() {
@@ -27,8 +31,21 @@ MockingBird.XMLHttpRequest.enableNetworkConnections = function enableNetworkConn
 	if (this.enabledCallback) {
 		this.enabledCallback.callback.call(this.enabledCallback.context);
 	}
+
+	return this;
 };
-*/
+
+MockingBird.XMLHttpRequest.getMock = function getMock(url, method) {
+	var key = method.toUpperCase() + " " + url;
+
+	return this.mocks[key] || null;
+};
+
+MockingBird.XMLHttpRequest.mock = function mock(url, method, options) {
+	var key = method.toUpperCase() + " " + url;
+	this.mocks[key] = options;
+	return this;
+};
 
 MockingBird.XMLHttpRequest.prototype = {
 
@@ -46,19 +63,11 @@ MockingBird.XMLHttpRequest.prototype = {
 
 	_data: null,
 
-	_waitTime: null,
-
 	_url: null,
 
 	constructor: MockingBird.XMLHttpRequest,
 
 	// Test setup methods
-
-	andWaits: function andWaits(waitTime) {
-		// TODO: Call setTimeout(...) when sending request
-		this._waitTime = waitTime;
-		return this;
-	},
 
 	returnsStatus: function returnsStatus(endingStatus) {
 		this._status = endingStatus;
@@ -66,19 +75,27 @@ MockingBird.XMLHttpRequest.prototype = {
 	},
 
 	returnsBody: function returnsBody(body) {
-		this._body = body;
+		this._body = typeof body === "object" ? JSON.stringify(body) : body;
 		return this;
 	},
 
 	returnsHeaders: function returnsHeaders(headers) {
-		// TODO: use vanilla JS
-		this._responseHeaders.merge(headers);
+		for (var key in headers) {
+			if (headers.hasOwnProperty(key)) {
+				this._responseHeaders[key] = headers[key];
+			}
+		}
+
 		return this;
 	},
 
 	sendsHeaders: function sendsHeaders(headers) {
-		// TODO: use vanilla JS
-		this._requestHeaders.merge(headers);
+		for (var key in headers) {
+			if (headers.hasOwnProperty(key)) {
+				this._requestHeaders[key] = headers[key];
+			}
+		}
+
 		return this;
 	},
 
@@ -86,7 +103,7 @@ MockingBird.XMLHttpRequest.prototype = {
 		this.readyState = readyState;
 		this.status = status;
 
-		if (this.status === 4) {
+		if (this.readyState === 4) {
 			this.responseText = this._body;
 			this.responseXML = this._parseResponseText();
 		}
@@ -118,7 +135,35 @@ MockingBird.XMLHttpRequest.prototype = {
 		this._changeState(4, this._status);
 	},
 
+	_setOptions: function _setOptions(options) {
+		if (options.hasOwnProperty("body")) {
+			this.returnsBody(options.body);
+		}
+
+		if (options.hasOwnProperty("status")) {
+			this.returnsStatus(options.status);
+		}
+
+		if (options.hasOwnProperty("requestHeaders")) {
+			this.sendsHeaders(options.requestHeaders);
+		}
+
+		if (options.hasOwnProperty("responseHeaders")) {
+			this.returnsHeaders(options.responseHeaders);
+		}
+	},
+
 	// Standard XMLHttpRequest interface
+
+	DONE: 4,
+
+	HEADERS_RECEIVED: 2,
+
+	LOADING: 3,
+
+	OPENED: 1,
+
+	UNSENT: 0,
 
 	readyState: 0,
 
@@ -151,6 +196,12 @@ MockingBird.XMLHttpRequest.prototype = {
 		this._method = method;
 		this._url = url;
 		this._async = async;
+
+		var options = this.constructor.getMock(url, method);
+
+		if (options) {
+			this._setOptions(options);
+		}
 	},
 
 	send: function send(data) {
