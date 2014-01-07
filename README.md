@@ -53,7 +53,7 @@ You can mock all requests for a period of time.
 
     MockingBird.XMLHttpRequest.disableNetworkConnections(obj, function() {
         // connections have been re-enabled
-        // "this" is points to the "obj" variable
+        // "this" points to the "obj" variable
     });
 
 While network connections are disabled, you can mock requests based on the URL
