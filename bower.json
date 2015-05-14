@@ -4,11 +4,14 @@
 	"authors": [
 		"Greg Burghardt <greg_burghardt@yahoo.com>"
 	],
-	"version": "0.0.1",
+	"version": "1.0.0",
 	"license": "MIT",
 	"repository": { "type": "git", "url": "https://github.com/gburghardt/mocking_bird.git" },
 	"main": [
-		"src/mocking_bird.js",
-		"src/mocking_bird/xml_http_request.js"
-	]
+		"src/MockingBird.js",
+		"src/MockingBird/XMLHttpRequest.js"
+	],
+	"devDependencies": {
+		"jasmine-data_driven_tests": "~1.0"
+	}
 }

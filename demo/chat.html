@@ -1,0 +1,44 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Mocking Bird: Chat Demo (Mocking AJAX)</title>
+</head>
+<body>
+
+<form method="get" action="#">
+	<ol></ol>
+	<p>
+		<input type="text" name="messageText">
+		<button type="submit">Send</button>
+	</p>
+</form>
+
+<script type="text/javascript" src="../dist/MockingBird-1.0.0.js"></script>
+<script type="text/javascript" src="./chat/ChatController.js"></script>
+<script type="text/javascript">
+var interceptor = MockingBird.interceptAjax(window);
+
+interceptor
+	.mock("POST", "/conversations/join")
+	.returns(200, "123");
+
+interceptor
+	.mock("POST", "/conversations/123")
+	.chunks(200,
+		[
+			{
+				user: "Bob",
+				text: "Hello"
+			},{
+				user: "Jan",
+				text: "Good day, everyone!"
+			}
+		]
+	);
+
+var chat = new ChatController(document.querySelector("form"));
+
+</script>
+</body>
+</html>

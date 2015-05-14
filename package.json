@@ -1,0 +1,12 @@
+{
+	"name": "MockingBird",
+	"version": "1.0.0",
+	"devDependencies": {
+		"grunt": "~0.4.2",
+		"grunt-contrib-concat": "~0.1.2",
+		"grunt-contrib-jshint": "~0.6.3",
+		"grunt-contrib-nodeunit": "~0.2.0",
+		"grunt-yui-compressor": "~0.3.3",
+		"grunt-jsdoc": "~0.5.8"
+	}
+}

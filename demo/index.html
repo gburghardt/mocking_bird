@@ -1,50 +1,13 @@
 <!DOCTYPE HTML>
 <html>
 <head>
+	<meta charset="utf-8">
 	<title>Demo: MockingBird.XMLHttpRequest</title>
 </head>
 <body>
 	<p>Open the browser console and reload this page</p>
-	<script type="text/javascript" src="../src/mocking_bird.js"></script>
-	<script type="text/javascript" src="../src/mocking_bird/xml_http_request.js"></script>
-	<script type="text/javascript">
-		MockingBird.XMLHttpRequest.disableNetworkConnections()
-			.mock("/posts/123", "GET", {
-				status: 404,
-
-				body: "<p>The page you are looking for is not found</p>"
-			})
-			.mock("/posts/123/comments", "POST", {
-				status: 201,
-
-				body: {
-					post: {
-						id:123,
-						comment: {
-							id: 89982
-						}
-					}
-				}
-			});
-
-		function onReadyStateChange() {
-			if (this.readyState === 4) {
-				console.log("Status: " + this.status + "\n\n" + this.responseText);
-			}
-		}
-
-		var xhr = new XMLHttpRequest();
-
-		xhr.onreadystatechange = onReadyStateChange;
-		xhr.open("GET", "/posts/123");
-		xhr.send(null);
-
-		xhr = new XMLHttpRequest();
-		xhr.onreadystatechange = onReadyStateChange;
-		xhr.open("POST", "/posts/123/comments");
-		xhr.send(null);
-
-		MockingBird.XMLHttpRequest.enableNetworkConnections()
-	</script>
+	<p>View a <a href="./chat.html">sample chat demo</a></p>
+	<script type="text/javascript" src="../dist/MockingBird-1.0.0.js"></script>
+	<script type="text/javascript" src="./demo.js"></script>
 </body>
 </html>
