@@ -31,6 +31,10 @@ MockingBird.XMLHttpRequestInterceptor.prototype = {
 
 	constructor: MockingBird.XMLHttpRequestInterceptor,
 
+	/**
+	 * Ready this interceptor for garbage collection, and return its global
+	 * object back to its normal state.
+	 */
 	destroy: function() {
 		if (this.global) {
 			this.global.XMLHttpRequest = this.OriginalXMLHttpRequest;
@@ -39,6 +43,20 @@ MockingBird.XMLHttpRequestInterceptor.prototype = {
 		this.mocks = this.global = this.OriginalXMLHttpRequest = null;
 	},
 
+	/**
+	 * Gets a {@link MockingBird.XMLHttpRequestProxy} object that was previously
+	 * mocked. While public, this method is called by the
+	 * {@link MockingBird.XMLHttpRequestProxy} object when the
+	 * [open]{@link MockingBird.XMLHttpRequestProxy#open} method is invoked.
+	 *
+	 * @throws {MockingBird.XMLHttpRequestMockNotFoundError}
+	 * @param {String} method The HTTP method for the mock request (GET, POST, PUT, DELETE, HEAD)
+	 * @param {String} url The URL the mock request will get sent to
+	 * @param {boolean} [async=true] Whether or not the mock request is marked as asynchronous. Note: The mock gets executed synchronously anyhow
+	 * @param {String} [username=null] The username sent with the plain text authentication
+	 * @param {String} [password=null] The password sent with the plain text authentication
+	 * @returns {MockingBird.XMLHttpRequestProxy}
+	 */
 	getRequest: function(method, url, async, username, password) {
 		var i = this.mocks.length;
 
@@ -59,6 +77,17 @@ MockingBird.XMLHttpRequestInterceptor.prototype = {
 		};
 	},
 
+	/**
+	 * Returns a {@link MockingBird.XMLHttpRequest.MockBuilder} object allowing
+	 * you to mock a request to a URL.
+	 *
+	 * @param {String} method The HTTP method for the mock request (GET, POST, PUT, DELETE, HEAD)
+	 * @param {String} url The URL the mock request will get sent to
+	 * @param {boolean} [async=true] Whether or not the mock request is marked as asynchronous. Note: The mock gets executed synchronously anyhow
+	 * @param {String} [username=null] The username sent with the plain text authentication
+	 * @param {String} [password=null] The password sent with the plain text authentication
+	 * @returns {MockingBird.XMLHttpRequest.MockBuilder}
+	 */
 	mock: function(method, url, async, username, password) {
 		var mock = new MockingBird.XMLHttpRequest.MockBuilder(method, url, async, username, password);
 
@@ -69,6 +98,17 @@ MockingBird.XMLHttpRequestInterceptor.prototype = {
 
 };
 
+/**
+ * Exception thrown when no mock was found for the given connection information
+ *
+ * @class MockingBird.XMLHttpRequestMockNotFoundError
+ * @extends Error
+ * @param {String} method The HTTP method for the mock request (GET, POST, PUT, DELETE, HEAD)
+ * @param {String} url The URL the mock request will get sent to
+ * @param {boolean} async Whether or not the mock request is marked as asynchronous. Note: The mock gets executed synchronously anyhow
+ * @param {String} username The username sent with the plain text authentication
+ * @param {String} password The password sent with the plain text authentication
+ */
 MockingBird.XMLHttpRequestMockNotFoundError = function XMLHttpRequestMockNotFoundError(method, url, async, username, password) {
 	var error = new Error("No mock registered for " + method + " " + url + " (async: " + async + "; username: " + username + "; password: " + password + ")");
 	error.name = "MockingBird.XMLHttpRequestMockNotFoundError";

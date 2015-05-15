@@ -1,5 +1,6 @@
 /**
  * This class mocks the native XMLHttpRequest object.
+ *
  * @class XMLHttpRequest
  * @memberof MockingBird
  */
@@ -22,7 +23,11 @@ MockingBird.XMLHttpRequest.prototype = {
 
 	_data: null,
 
+	_password: null,
+
 	_url: null,
+
+	_username: null,
 
 	constructor: MockingBird.XMLHttpRequest,
 
@@ -30,8 +35,8 @@ MockingBird.XMLHttpRequest.prototype = {
 	 * Mocks an HTTP request that returns the given status, body and headers
 	 *
 	 * @param {Number} status The HTTP status code
-	 * @param {String} body=null The optional body of the HTTP response
-	 * @param {Object} headers={} An optional key-value hash of response header names and values
+	 * @param {String} [body=null] The optional body of the HTTP response
+	 * @param {Object} [headers={}] An optional key-value hash of response header names and values
 	 * @returns {MockingBird.XMLHttpRequest.SimpleConnectionStrategy}
 	 */
 	returns: function(status, body, headers) {
@@ -47,7 +52,7 @@ MockingBird.XMLHttpRequest.prototype = {
 	 * @returns {MockingBird.XMLHttpRequest.ConnectionBuilderStrategy}
 	 */
 	connects: function() {
-		return this._connectionStrategy = new MockingBird.XMLHttpRequest.ConnectionBuilderStrategy(this);
+		return this._connectionStrategy = new MockingBird.XMLHttpRequest.ConnectionBuilderStrategy(this).connects();
 	},
 
 	changeState: function(readyState, status) {
@@ -59,6 +64,33 @@ MockingBird.XMLHttpRequest.prototype = {
 		}
 
 		this.onreadystatechange();
+	},
+
+	/**
+	 * Delays the execution of this request so unit tests can control the
+	 * request life cycle and make assertions in between each phase.
+	 *
+	 * @returns {MockingBird.XMLHttpRequest.ConnectionBuilderStrategy}
+	 */
+	delayExecution: function() {
+		return this._connectionStrategy = new MockingBird.XMLHttpRequest.ConnectionBuilderStrategy(this).delayExecution();
+	},
+
+	/**
+	 * Get a key-value hash of all request headers
+	 * @returns {Object}
+	 */
+	getAllRequestHeaders: function() {
+		return this._requestHeaders;
+	},
+
+	/**
+	 * Returns an object containing information about the last request.
+	 *
+	 * @returns {MockingBird.XMLHttpRequest.RequestInfo}
+	 */
+	getLastRequest: function() {
+		return new MockingBird.XMLHttpRequest.RequestInfo(this);
 	},
 
 	_parseResponseText: function() {
@@ -167,6 +199,7 @@ MockingBird.XMLHttpRequest.prototype = {
 
 	/**
 	 * Get a key-value hash of all response headers
+	 * @returns {Object}
 	 */
 	getAllResponseHeaders: function() {
 		return this._responseHeaders;
@@ -211,12 +244,16 @@ MockingBird.XMLHttpRequest.prototype = {
 	 * Opens the connection
 	 * @param {String} method The HTTP method, or verb, to be used for this request (GET, POST, HEAD, PUT, DELETE)
 	 * @param {String} url The URL to send the request to
-	 * @param {boolean} async=true Whether or not the HTTP request should be a blocking call
+	 * @param {boolean} [async=true] Whether or not the HTTP request should be a blocking call
+	 * @param {String} [username=null] The username to send with the request
+	 * @param {String} [password=null] The password to send with the request
 	 */
-	open: function(method, url, async) {
+	open: function(method, url, async, username, password) {
 		this._method = method;
 		this._url = url;
 		this._async = !!async;
+		this._username = username;
+		this._password = password;
 		this.changeState(this.OPENED, 0);
 	},
 
@@ -226,7 +263,7 @@ MockingBird.XMLHttpRequest.prototype = {
 
 	/**
 	 * Sends the request to the server
-	 * @param {String} data=null The URI encoded HTTP request body to send with the request
+	 * @param {String} [data=null] The URI encoded HTTP request body to send with the request
 	 */
 	send: function(data) {
 		this._data = data;

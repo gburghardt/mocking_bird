@@ -1,0 +1,2 @@
+describe("MockingBird.XMLHttpRequest", function() {
+});

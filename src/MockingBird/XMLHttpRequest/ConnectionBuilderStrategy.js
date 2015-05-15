@@ -1,7 +1,7 @@
 /**
  * This class allows you to build a custom HTTP request lifecycle for an AJAX request
  * @class MockingBird.XMLHttpRequest.ConnectionBuilderStrategy
- * @implements MockingBird.XMLHttpRequest.IConnectionStrategy
+ * @augments MockingBird.XMLHttpRequest.IConnectionStrategy
  * @param {MockingBird.XMLHttpRequest} xhr The mock AJAX object
  */
 MockingBird.XMLHttpRequest.ConnectionBuilderStrategy = function ConnectionBuilderStrategy(xhr) {
@@ -14,7 +14,8 @@ MockingBird.XMLHttpRequest.ConnectionBuilderStrategy.prototype = {
 
 	/**
 	 * An array representing each response chunk from the server
-	 * @member {Array<String>}
+	 * @member {Array<String>} chunks
+	 * @memberof MockingBird.XMLHttpRequest.ConnectionBuilderStrategy
 	 */
 	chunks: null,
 
@@ -24,13 +25,15 @@ MockingBird.XMLHttpRequest.ConnectionBuilderStrategy.prototype = {
 
 	/**
 	 * The raw request body sent with the request as a result of invoking {@link MockingBird.XMLHttpRequest#send}
-	 * @member {String}
+	 * @member {String} requestBody
+	 * @memberof MockingBird.XMLHttpRequest.ConnectionBuilderStrategy
 	 */
 	requestBody: null,
 
 	/**
 	 * The mock AJAX object
-	 * @member {MockingBird.XMLHttpRequest}
+	 * @member {MockingBird.XMLHttpRequest} xhr
+	 * @memberof MockingBird.XMLHttpRequest.ConnectionBuilderStrategy
 	 */
 	xhr: null,
 
@@ -95,8 +98,19 @@ MockingBird.XMLHttpRequest.ConnectionBuilderStrategy.prototype = {
 	/**
 	 * This connection is done. No more headers or data will be sent.
 	 *
+	 * @function MockingBird.XMLHttpRequest.ConnectionBuilderStrategy#done
+	 *
 	 * @param {Number} status The HTTP status code
 	 * @param {String} body The body of the HTTP response, or the last chunk if simulating a chunked response
+	 * @returns {MockingBird.XMLHttpRequest.ConnectionBuilderStrategy}
+	 */
+	/**
+	 * This connection is done. No more headers or data will be sent.
+	 *
+	 * @function MockingBird.XMLHttpRequest.ConnectionBuilderStrategy#done
+	 *
+	 * @param {Number} status The HTTP status code
+	 * @param {Object} body An object representing the body or the last chunk of the response. Gets stringified using <code>JSON.stringify</code>
 	 * @returns {MockingBird.XMLHttpRequest.ConnectionBuilderStrategy}
 	 */
 	done: function(status, body) {

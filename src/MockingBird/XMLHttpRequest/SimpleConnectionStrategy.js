@@ -2,7 +2,7 @@
  * This class mocks a simple HTTP request that goes through each phase and ends
  * with the given status and response body.
  * @class MockingBird.XMLHttpRequest.SimpleConnectionStrategy
- * @implements MockingBird.XMLHttpRequest.IConnectionStrategy
+ * @augments MockingBird.XMLHttpRequest.IConnectionStrategy
  * @param {MockingBird.XMLHttpRequest} xhr A mock AJAX object
  */
 MockingBird.XMLHttpRequest.SimpleConnectionStrategy = function SimpleConnectionStrategy(xhr) {
@@ -20,7 +20,8 @@ MockingBird.XMLHttpRequest.SimpleConnectionStrategy.prototype = {
 
 	/**
 	 * The mock AJAX object
-	 * @member {MockingBird.XMLHttpRequest}
+	 * @member {MockingBird.XMLHttpRequest} xhr
+	 * @memberof MockingBird.XMLHttpRequest.SimpleConnectionStrategy
 	 */
 	xhr: null,
 
@@ -28,7 +29,18 @@ MockingBird.XMLHttpRequest.SimpleConnectionStrategy.prototype = {
 
 	/**
 	 * Sets the body for this mock request
-	 * @param {String} body
+	 *
+	 * @function MockingBird.XMLHttpRequest.SimpleConnectionStrategy#body
+	 *
+	 * @param {String} body The body of the HTTP response
+	 * @returns {MockingBird.XMLHttpRequest.SimpleConnectionStrategy}
+	 */
+	/**
+	 * Sets the body for this mock request
+	 *
+	 * @function MockingBird.XMLHttpRequest.SimpleConnectionStrategy#body
+	 *
+	 * @param {Object} body The body of the HTTP response as an object that will get stringified using <code>JSON.stringify</code>
 	 * @returns {MockingBird.XMLHttpRequest.SimpleConnectionStrategy}
 	 */
 	body: function(body) {

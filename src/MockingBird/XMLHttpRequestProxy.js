@@ -11,7 +11,7 @@
 MockingBird.XMLHttpRequestProxy = function XMLHttpRequestProxy(requestFactory) {
 
 	var xhr = null,
-	    onReadyStateChange = null;
+	    onReadyStateChange = function() {};
 
 	Object.defineProperty(this, "onreadystatechange", {
 		get: function() {

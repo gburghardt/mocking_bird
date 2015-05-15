@@ -13,18 +13,19 @@ module.exports = function(grunt) {
           "src/MockingBird/XMLHttpRequest.js",
           "src/MockingBird/XMLHttpRequest/ConnectionBuilderStrategy.js",
           "src/MockingBird/XMLHttpRequest/MockBuilder.js",
+          "src/MockingBird/XMLHttpRequest/RequestInfo.js",
           "src/MockingBird/XMLHttpRequest/SimpleConnectionStrategy.js",
           "src/MockingBird/XMLHttpRequestInterceptor.js",
           "src/MockingBird/XMLHttpRequestProxy.js"
         ],
-        dest: "dist/<%= pkg.name %>-<%= pkg.version %>.js"
+        dest: "dist/<%= pkg.name %>.js"
       }
     },
 
     min: {
       base: {
-        src: "dist/<%= pkg.name %>-<%= pkg.version %>.js",
-        dest: "dist/<%= pkg.name %>-<%= pkg.version %>.min.js"
+        src: "dist/<%= pkg.name %>.js",
+        dest: "dist/<%= pkg.name %>.min.js"
       }
     },
 

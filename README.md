@@ -165,6 +165,50 @@ two kinds of mocking strategies:
    // strategy.chunks = ["1", "2", "3"]
    ```
 
+### Verifying Mocked AJAX Requests
+
+After the request is complete, you can verify some information about the last
+request:
+
+```javascript
+var strategy = new MockingBird.XMLHttpRequest()
+    .returns(200, "OK", { "content-type": "text/plain" });
+
+var xhr = strategy.xhr;
+
+xhr.open("GET", "/foo", true, "abc", "123");
+xhr.setRequestHeader("X-REQUESTED-WITH", "XMLHttpRequest");
+xhr.send("x=2");
+
+var request = xhr.getLastRequest();
+
+// Property values
+request.data        // -> "x=2"
+request.status      // -> 200
+request.readyState  // -> 4
+request.reponseText // -> "OK"
+request.responseXML // -> null
+request.method      // -> "GET"
+request.async       // -> true
+request.username    // -> "abc"
+request.password    // -> "123"
+request.url         // -> "/foo"
+
+// Verifying request state
+request.isGet()      // -> true
+request.isDelete()   // -> false
+request.isHead()     // -> false
+request.isPost()     // -> false
+request.isPut()      // -> false
+request.isComplete() // -> true
+
+// Verify request and response headers
+request.hasResponseHeader("content-type")    // -> true
+request.getResponseHeader("content-type")    // -> "text/plain"
+request.hasRequestHeader("X-REQUESTED-WITH") // -> true
+request.getRequestHeader("X-REQUESTED-WITH") // -> "XMLHttpRequest"
+```
+
 ### How to Intercept AJAX Requests
 
 Many applications use AJAX through a third party library, or by creating an AJAX
